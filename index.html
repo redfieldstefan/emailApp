@@ -48,7 +48,7 @@
         <input type="radio" id="spaceCheck" name="separationType" value="spaceSeparated">Space Separated (Emails Only)
       </form>
       <textarea name="email" id="emailSubmissions" cols="30" rows="10"></textarea>
-      <button id="submit" onClick="emailFormatter()">Submit</button>
+      <button id="submit" onClick="emailFormatter()">Submit Contacts</button>
     </section>
 
     <section class="emailList">
@@ -58,7 +58,7 @@
     </section>
 
     <section id="errors" >
-      <h2>Error</h2>
+      <h2>Errors</h2>
       <ul id="errorUl">
       </ul>
       <button class="clearErrors" onClick="clearErrors()">Clear Errors</button>
@@ -92,7 +92,7 @@
         }
       };
 
-      var cleanString = function(string){
+      var cleanString = function(string) {
         var charRange = function(character) {
           var charCode = character.charCodeAt(0);
           if((charCode > 64 && charCode < 90) || (charCode > 97 && charCode < 122) || (charCode > 48 && charCode < 58)) {
@@ -103,31 +103,31 @@
         var split = string.split('');
         if(!charRange(split[0])) {
           split.shift();
-        } if(!charRange(split[split.length - 1])) {
-            split.pop();
         }
-        return split.join('')
+        if(!charRange(split[split.length - 1])) {
+          split.pop();
+        }
+        return split.join('');
       };
 
       var emailFormatter = function() {
         var splitInput = submissions.value.split(splitType());
-        splitInput.forEach(function(contact){
-          var splitContactItem = contact.split(' ');
+        splitInput.forEach(function(contact) {
+          var splitContactString = contact.split(' ');
           var names = [];
           var email = [];
-          splitContactItem.forEach(function(string){
+          splitContactString.forEach(function(string) {
             string = cleanString(string);
             if(isName.test(string)) {
               return names.push(string);
             }
-            else email.push(string);
+            return email.push(string);
           });
-          if(!validEmail.test(email[0])){
+          if(!validEmail.test(email[0])) {
               errors.style.display="block";
               var errorLi = document.createElement('li');
               errorLi.innerText = names.join(' ') + ' ' + email[0] + " [error parsing email string]";
-              document.getElementById('errorUl').appendChild(errorLi);
-              return
+              return document.getElementById('errorUl').appendChild(errorLi);
           }
           else {
             if(names.length === 0) {
