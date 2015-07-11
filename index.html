@@ -60,7 +60,7 @@
     </section>
 
     <section id="errors" >
-      <h2>Errors</h2>
+      <h2>Errors (maybe check input style type)</h2>
       <ul id="errorUl"></ul>
       <button class="clearErrors" onClick="clearErrors()">Clear Errors</button>
     </section>
@@ -89,20 +89,24 @@
       };
 
       var cleanString = function(string) {
-        var validCharRange = function(character) {
-          var charCode = character.charCodeAt(0);
-          if((charCode > 64 && charCode < 90) || (charCode > 97 && charCode < 122) || (charCode > 48 && charCode < 58)) {
-            return true;
-          }
-          return false;
-        };
+        var isValidString = /^[a-zA-Z0-9]+$/;
         var split = string.split('');
-        if(!validCharRange(split[0])) {
-          split.shift();
-        }
-        if(!validCharRange(split[split.length - 1])) {
-          split.pop();
-        }
+        var cleanFront = function() {
+          if(!isValidString.test(split[0])) {
+            split.shift();
+            cleanFront();
+          }
+          return;
+        };
+        var cleanBack = function() {
+          if(!isValidString.test(split[split.length-1])) {
+            split.pop();
+            cleanBack();
+          }
+          return;
+        };
+        cleanFront();
+        cleanBack();
         return split.join('');
       };
 
