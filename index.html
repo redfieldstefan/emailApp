@@ -70,15 +70,13 @@
 
       document.getElementById('errors').style.display="none";
 
-      var isName = /^[a-zA-Z]+$/;
-      var validEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
       var submissions = document.getElementById('emailSubmissions');
       var errorUl = document.getElementById('errorUl');
 
       var clearErrors = function() {
         while (errorUl.hasChildNodes()) {
           errorUl.removeChild(errorUl.firstChild);
-        };
+        }
         document.getElementById('errors').style.display="none";
       };
 
@@ -93,24 +91,26 @@
       };
 
       var cleanString = function(string) {
-        var charRange = function(character) {
+        var validCharRange = function(character) {
           var charCode = character.charCodeAt(0);
           if((charCode > 64 && charCode < 90) || (charCode > 97 && charCode < 122) || (charCode > 48 && charCode < 58)) {
             return true;
-          };
+          }
           return false;
         };
         var split = string.split('');
-        if(!charRange(split[0])) {
+        if(!validCharRange(split[0])) {
           split.shift();
         }
-        if(!charRange(split[split.length - 1])) {
+        if(!validCharRange(split[split.length - 1])) {
           split.pop();
         }
         return split.join('');
       };
 
       var emailFormatter = function() {
+        var isName = /^[a-zA-Z]+$/;
+        var validEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         var splitInput = submissions.value.split(splitType());
         splitInput.forEach(function(contact) {
           var splitContactString = contact.split(' ');
@@ -138,8 +138,10 @@
             document.getElementById('contacts').appendChild(listItem);
           }
         });
-        document.getElementById('emailSubmissions').value = "";
+
+        emailSubmissions.value = "";
       };
+
     </script>
   </body>
 </html>
