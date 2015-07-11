@@ -35,6 +35,9 @@
       strong {
         color: #FFCC99;
       }
+      #errors {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -53,22 +56,17 @@
 
     <section class="emailList">
       <h2>New Contacts</h2>
-      <ul id="contacts">
-      </ul>
+      <ul id="contacts"></ul>
     </section>
 
     <section id="errors" >
       <h2>Errors</h2>
-      <ul id="errorUl">
-      </ul>
+      <ul id="errorUl"></ul>
       <button class="clearErrors" onClick="clearErrors()">Clear Errors</button>
     </section>
 
     <script>
-
       'use strict';
-
-      document.getElementById('errors').style.display="none";
 
       var submissions = document.getElementById('emailSubmissions');
       var errorUl = document.getElementById('errorUl');
