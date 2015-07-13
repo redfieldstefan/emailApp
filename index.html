@@ -91,22 +91,16 @@
       var cleanString = function(string) {
         var isValidString = /^[a-zA-Z0-9]+$/;
         var split = string.split('');
-        var cleanFront = function() {
-          if(!isValidString.test(split[0])) {
+           if(!isValidString.test(split[0])) {
             split.shift();
-            cleanFront();
+            string = split.join('');
+            return cleanString(string);
           }
-          return;
-        };
-        var cleanBack = function() {
-          if(!isValidString.test(split[split.length-1])) {
+           if(!isValidString.test(split[split.length-1])) {
             split.pop();
-            cleanBack();
+            string = split.join('');
+            return cleanString(string);
           }
-          return;
-        };
-        cleanFront();
-        cleanBack();
         return split.join('');
       };
 
