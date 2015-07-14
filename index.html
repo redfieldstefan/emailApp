@@ -45,7 +45,7 @@
     <section class="emailSubmit">
       <h1>Submit your contacts for processing</h1>
       <textarea name="email" id="emailSubmissions" cols="30" rows="10"></textarea>
-      <button id="submit" onClick="emailFormatter()">Submit Contacts</button>
+      <button id="submit" onClick="parse()">Submit Contacts</button>
     </section>
 
     <section class="emailList">
@@ -103,7 +103,7 @@
         return formatted;
       }
 
-      var emailFormatter = function() {
+      var parse = function() {
         var isName = /^[a-zA-Z0-9]+$/;
         var isValidEmail = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
         var submissions = document.getElementById('emailSubmissions').value;
