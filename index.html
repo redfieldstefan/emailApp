@@ -93,21 +93,20 @@
           return cleanString(string);
         });
         formatted.forEach(function(string){
-          if(isName.test(string)) {
-            return null;
+          if(!isName.test(string)) {
+            var split = string.split('');
+            split.push(',');
+            var index = formatted.indexOf(string);
+            return formatted[index] = split.join('');
           }
-          var split = string.split('');
-          split.push(',');
-          var index = formatted.indexOf(string);
-          return formatted[index] = split.join('');
         });
         return formatted;
       }
 
       var emailFormatter = function() {
-        var submissions = document.getElementById('emailSubmissions').value;
         var isName = /^[a-zA-Z0-9]+$/;
         var isValidEmail = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        var submissions = document.getElementById('emailSubmissions').value;
         var formattedSubmission = formatForParse(submissions).join(' ');
         formattedSubmission.split(', ').forEach(function(contact) {
           var splitContactString = contact.split(' ');
@@ -122,9 +121,9 @@
           });
           if(!isValidEmail.test(email[0])) {
               var errorUl = document.getElementById('errorUl');
-              errors.style.display="block";
+              errors.style.display='block';
               var errorLi = document.createElement('li');
-              errorLi.innerText = names.join(' ') + ' ' + email[0] + " [error parsing email string]";
+              errorLi.innerText = names.join(' ') + ' ' + email[0] + ' [error parsing email string]';
               return document.getElementById('errorUl').appendChild(errorLi);
           }
           else {
@@ -132,11 +131,11 @@
               names.push('no contact name');
             }
             var listItem = document.createElement('li');
-            listItem.innerHTML ="<strong>Name:</strong> " + names.join(' ') +" <strong>Email:</strong> <<a href='mailto:" + email[0] + "'>" + email[0] + "</a>>";
+            listItem.innerHTML = '<strong>Name:</strong> ' + names.join(' ') +' <strong>Email:</strong> <<a href="mailto:' + email[0] + '">' + email[0] + '</a>>';
             document.getElementById('contacts').appendChild(listItem);
           }
         });
-        emailSubmissions.value = "";
+        emailSubmissions.value = '';
       };
     </script>
   </body>
