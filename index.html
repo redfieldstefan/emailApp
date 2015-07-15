@@ -87,7 +87,7 @@
       };
 
       var formatForParse = function(value) {
-        var isName = /^[a-zA-Z0-9]+$/
+        var isName = /^[a-zA-Z0-9]+$/;
         var toFormat = value.split(/[\n ,]+/).filter(Boolean);
         var formatted = toFormat.map(function(string) {
           string = cleanString(string);
