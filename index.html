@@ -44,14 +44,8 @@
 
     <section class="emailSubmit">
       <h1>Submit your contacts for processing</h1>
-      <form action="">
-        <h3>Input Style</h3>
-        <input type="radio" id="commaCheck" name="separationType" value="commaSeparated" checked="true">Comma Separated (Contact + Email) <br>
-        <input type="radio" id="lineCheck" name="separationType" value="lineSeparated">New line Separated (Contact + Email) <br>
-        <input type="radio" id="spaceCheck" name="separationType" value="spaceSeparated">Space Separated (Emails Only)
-      </form>
       <textarea name="email" id="emailSubmissions" cols="30" rows="10"></textarea>
-      <button id="submit" onClick="emailFormatter()">Submit Contacts</button>
+      <button id="submit" onClick="parse()">Submit Contacts</button>
     </section>
 
     <section class="emailList">
@@ -60,7 +54,7 @@
     </section>
 
     <section id="errors" >
-      <h2>Errors (maybe check input style type)</h2>
+      <h2>Errors</h2>
       <ul id="errorUl"></ul>
       <button class="clearErrors" onClick="clearErrors()">Clear Errors</button>
     </section>
@@ -68,53 +62,51 @@
     <script>
       'use strict';
 
-      var submissions = document.getElementById('emailSubmissions');
-      var errorUl = document.getElementById('errorUl');
-
       var clearErrors = function() {
+        var errorUl = document.getElementById('errorUl');
         while (errorUl.hasChildNodes()) {
           errorUl.removeChild(errorUl.firstChild);
         }
         document.getElementById('errors').style.display="none";
       };
 
-      var splitType = function(){
-        if(document.getElementById('commaCheck').checked) {
-            return (', ');
-        } else if(document.getElementById('lineCheck').checked) {
-            return ('\n');
-        } else if(document.getElementById('spaceCheck').checked) {
-            return(' ')
-        }
-      };
-
       var cleanString = function(string) {
         var isValidString = /^[a-zA-Z0-9]+$/;
         var split = string.split('');
-        var cleanFront = function() {
-          if(!isValidString.test(split[0])) {
+           if(!isValidString.test(split[0])) {
             split.shift();
-            cleanFront();
+            string = split.join('');
+            return cleanString(string);
           }
-          return;
-        };
-        var cleanBack = function() {
-          if(!isValidString.test(split[split.length-1])) {
+           if(!isValidString.test(split[split.length-1])) {
             split.pop();
-            cleanBack();
+            string = split.join('');
+            return cleanString(string);
           }
-          return;
-        };
-        cleanFront();
-        cleanBack();
         return split.join('');
       };
 
-      var emailFormatter = function() {
-        var isName = /^[a-zA-Z]+$/;
-        var validEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        var splitInput = submissions.value.split(splitType());
-        splitInput.forEach(function(contact) {
+      var formatForParse = function(value) {
+        var isName = /^[a-zA-Z0-9]+$/;
+        var toFormat = value.split(/[\n ,]+/).filter(Boolean);
+        var formatted = toFormat.map(function(string) {
+          string = cleanString(string);
+          if(!isName.test(string)) {
+            var split = string.split('');
+            split.push(',');
+            return split.join('');
+          }
+          return string;
+        });
+        return formatted;
+      };
+
+      var parse = function() {
+        var isName = /^[a-zA-Z0-9]+$/;
+        var isValidEmail = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        var submissions = document.getElementById('emailSubmissions').value;
+        var formattedSubmission = formatForParse(submissions).join(' ');
+        formattedSubmission.split(', ').forEach(function(contact) {
           var splitContactString = contact.split(' ');
           var names = [];
           var email = [];
@@ -125,10 +117,11 @@
             }
             return email.push(string);
           });
-          if(!validEmail.test(email[0])) {
-              errors.style.display="block";
+          if(!isValidEmail.test(email[0])) {
+              var errorUl = document.getElementById('errorUl');
+              errors.style.display='block';
               var errorLi = document.createElement('li');
-              errorLi.innerText = names.join(' ') + ' ' + email[0] + " [error parsing email string]";
+              errorLi.innerText = names.join(' ') + ' ' + email[0] + ' [error parsing email string]';
               return document.getElementById('errorUl').appendChild(errorLi);
           }
           else {
@@ -136,14 +129,12 @@
               names.push('no contact name');
             }
             var listItem = document.createElement('li');
-            listItem.innerHTML ="<strong>Name:</strong> " + names.join(' ') +" <strong>Email:</strong> <<a href='mailto:" + email[0] + "'>" + email[0] + "</a>>";
+            listItem.innerHTML = '<strong>Name:</strong> ' + names.join(' ') +' <strong>Email:</strong> <<a href="mailto:' + email[0] + '">' + email[0] + '</a>>';
             document.getElementById('contacts').appendChild(listItem);
           }
         });
-
-        emailSubmissions.value = "";
+        emailSubmissions.value = '';
       };
-
     </script>
   </body>
 </html>
