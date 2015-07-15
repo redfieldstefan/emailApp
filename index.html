@@ -90,15 +90,13 @@
         var isName = /^[a-zA-Z0-9]+$/
         var toFormat = value.split(/[\n ,]+/).filter(Boolean);
         var formatted = toFormat.map(function(string) {
-          return cleanString(string);
-        });
-        formatted.forEach(function(string){
+          string = cleanString(string);
           if(!isName.test(string)) {
             var split = string.split('');
             split.push(',');
-            var index = formatted.indexOf(string);
-            return formatted[index] = split.join('');
+            return split.join('');
           }
+          return string;
         });
         return formatted;
       };
